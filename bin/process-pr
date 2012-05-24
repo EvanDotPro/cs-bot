@@ -7,7 +7,7 @@ $pr = 1362;
 $pr = 1364;
 $pr        = 1365;
 
-$pushUrl   = 'git@github.com:EvanDotPro/zf2.git';
+$pushUrl   = 'git@github.com:cs-bot/zf2.git';
 $repoPath  = 'data/git/zf2';
 $clonePath = 'data/git/zf2-pr-'.$pr;
 
