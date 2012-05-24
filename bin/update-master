@@ -1,0 +1,13 @@
+#!/usr/bin/env php
+<?php
+
+require_once 'init.php';
+
+$repoPath = 'data/git/zf2';
+
+$parser = new EdpGit\Parser($repoPath);
+
+echo $parser->run('checkout master');
+echo $parser->run('fetch upstream');
+echo $parser->run('merge --ff-only upstream/master');
+echo $parser->run('push origin master');

@@ -1,0 +1,12 @@
+[submodule "vendor/ZendFramework"]
+	path = vendor/ZendFramework
+	url = git://github.com/zendframework/zf2.git
+[submodule "vendor/EdpGit"]
+	path = vendor/EdpGit
+	url = git://github.com/EvanDotPro/EdpGit.git
+[submodule "vendor/EdpGithub"]
+	path = vendor/EdpGithub
+	url = git://github.com/EvanDotPro/EdpGithub.git
+[submodule "vendor/PHP-CS-Fixer"]
+	path = vendor/PHP-CS-Fixer
+	url = git://github.com/fabpot/PHP-CS-Fixer.git

@@ -1,0 +1,19 @@
+#!/usr/bin/env php
+<?php
+
+require_once 'init.php';
+
+$client = new EdpGithub\ApiClient\ApiClient;
+
+$pulls = $client->request('/repos/zendframework/zf2/pulls');
+
+foreach ($pulls as $pull) {
+    $prNumber = $pull['number'];
+    $branchName = $pull['head']['ref'];
+    $userName = $pull['user']['login'];
+
+
+    echo "{$prNumber} - {$userName}/{$branchName}\n";
+    
+
+}
