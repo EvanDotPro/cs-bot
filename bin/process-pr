@@ -7,6 +7,8 @@ $pr = 1362;
 $pr = 1364;
 $pr        = 1365;
 
+$auth = include_once 'auth.local.php';
+
 $pushUrl   = 'git@github.com:cs-bot/zf2.git';
 $repoPath  = 'data/git/zf2';
 $clonePath = 'data/git/zf2-pr-'.$pr;
@@ -50,3 +52,13 @@ echo $parser->run("commit -am 'Automated CS fixes.'");
 echo $parser->run("push {$pushUrl} {$prBranch}");
 
 echo `rm -rf {$clonePath}`;
+
+$json = <<<json
+{
+  "title": "[TEST] Coding standard fixes for PR #{$pr}",
+  "body": "## THIS IS JUST A TEST OF CS-BOT. PLEASE IGNORE / CLOSE THIS PULL REQUEST. Thank you.\n\nHello, I noticed the files affected by your pull request had some inconsistencies with the coding standard. No worries though, I went ahead and fixed the issues for you. You should be able to safely merge this pull request, which will automatically update your pending PR against the canonical repository.",
+  "head": "cs-bot:{$prBranch}",
+  "base": $branch
+}
+json;
+$pullRequest  = $client->request("/repos/{$user}/zf2/pulls", 'POST', $json, $auth);
