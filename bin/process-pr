@@ -1,0 +1,52 @@
+#!/usr/bin/env php
+<?php
+
+require_once 'init.php';
+
+$pr = 1362;
+$pr = 1364;
+$pr        = 1365;
+
+$pushUrl   = 'git@github.com:EvanDotPro/zf2.git';
+$repoPath  = 'data/git/zf2';
+$clonePath = 'data/git/zf2-pr-'.$pr;
+
+echo `git clone {$repoPath} {$clonePath}`;
+
+$parser = new EdpGit\Parser($clonePath);
+$repo   = new EdpGit\Repo($parser);
+
+$client = new EdpGithub\ApiClient\ApiClient;
+$pull   = $client->request('/repos/zendframework/zf2/pulls/' . $pr);
+
+$user   = $pull['head']['user']['login'];
+$remote = $pull['head']['repo']['clone_url'];
+$branch = $pull['head']['ref'];
+
+echo $parser->run("remote add {$user} {$remote}");
+echo $parser->run("fetch {$user}");
+
+$commits      = $repo->getBranchCommits("{$user}/{$branch}");
+$filesToCheck = array();
+
+foreach ($commits as $commit) {
+    $files = $commit->getFiles();
+    foreach ($files as $file) {
+        if ($file['insertions'] > 0) {
+            $filesToCheck[] = $file['file'];
+        }
+    }
+}
+
+$prBranch = "hotfix/pr-{$pr}-cs-fix";
+echo $parser->run("checkout -b {$prBranch} {$user}/{$branch}");
+print_r($filesToCheck);
+
+foreach ($filesToCheck as $file) {
+    echo `php bin/php-cs-fixer.phar fix {$clonePath}/{$file} --level=psr2`;
+}
+
+echo $parser->run("commit -am 'Automated CS fixes.'");
+echo $parser->run("push {$pushUrl} {$prBranch}");
+
+echo `rm -rf {$clonePath}`;
